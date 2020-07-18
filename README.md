@@ -6,7 +6,7 @@ This macOS app handles ssh URLs and opens it in [kitty terminal](https://sw.kovi
 
 ## Install
 
-1. Download [last version](https://github.com/Hejki/kitty-ssh/releases/tag/v1.0)
+1. Download [last version](https://github.com/Hejki/kitty-ssh/releases/tag/1.0)
 2. Unzip it
 3. Copy `kitty-ssh.app` to `/Application` folder
 
