@@ -27,7 +27,7 @@ import SwiftUI
 class AppDelegate: NSObject, NSApplicationDelegate {
     private static let kittyAppPath = "/Applications/kitty.app/Contents/MacOS/kitty"
     private static let kittyBundleIdentifier = "net.kovidgoyal.kitty"
-    private static var kittySocketPath = "/tmp/kitty-ssh"
+    private var kittySocketPath = "/tmp/kitty-ssh"
     private var launchType = "tab"
 
     func application(_ application: NSApplication, open urls: [URL]) {
@@ -51,7 +51,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
             break
         }
 
-        for _ in 0..<100 where !FileManager.default.fileExists(atPath: Self.kittySocketPath) {
+        for _ in 0..<100 where !FileManager.default.fileExists(atPath: kittySocketPath) {
             usleep(100000)
         }
     }
@@ -62,7 +62,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         process.launchPath = Self.kittyAppPath
         process.arguments = [
             "-o", "allow_remote_control=yes",
-            "--listen-on", "unix:\(Self.kittySocketPath)"
+            "--listen-on", "unix:\(kittySocketPath)"
         ]
         process.launch()
     }
@@ -99,10 +99,10 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let app = NSWorkspace.shared.runningApplications.first {$0.bundleIdentifier == Self.kittyBundleIdentifier }
 
         if (app != nil) {
-            Self.kittySocketPath += "-" + String((app?.processIdentifier.description)!)
+            kittySocketPath += "-" + String((app?.processIdentifier.description)!)
         }
 
-        if !FileManager.default.fileExists(atPath: Self.kittySocketPath) {
+        if !FileManager.default.fileExists(atPath: kittySocketPath) {
             return .notRunning
         }
 
@@ -135,7 +135,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         let process = Process()
 
         process.launchPath = Self.kittyAppPath
-        process.arguments = ["@", "--to", "unix:\(Self.kittySocketPath)"] + arguments
+        process.arguments = ["@", "--to", "unix:\(kittySocketPath)"] + arguments
         return process
     }
 }
