@@ -26,7 +26,8 @@ import SwiftUI
 @NSApplicationMain
 class AppDelegate: NSObject, NSApplicationDelegate {
     private static let kittyAppPath = "/Applications/kitty.app/Contents/MacOS/kitty"
-    private static let kittySocketPath = "/tmp/kitty-ssh"
+    private static let kittyBundleIdentifier = "net.kovidgoyal.kitty"
+    private static var kittySocketPath = "/tmp/kitty-ssh"
     private var launchType = "tab"
 
     func application(_ application: NSApplication, open urls: [URL]) {
@@ -95,6 +96,12 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     }
 
     private func getStatus() -> KittyStatus {
+        let app = NSWorkspace.shared.runningApplications.first {$0.bundleIdentifier == Self.kittyBundleIdentifier }
+
+        if (app != nil) {
+            Self.kittySocketPath += "-" + String((app?.processIdentifier.description)!)
+        }
+
         if !FileManager.default.fileExists(atPath: Self.kittySocketPath) {
             return .notRunning
         }
